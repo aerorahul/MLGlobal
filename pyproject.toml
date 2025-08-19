@@ -1,31 +1,79 @@
 [project]
 name = "mlgefs"
-version="0.1.0"
-description = "Implement Google DeepMind GenCast for Global Ensemble Forecast System (GEFS)"
+version = "0.1.0"
+description = "Implement Google DeepMind GraphCast for Global Ensemble Forecast System (GEFS)"
+readme = "readme.md"
 authors = [
-{name="Linlin Cui", email="linlin.cui@noaa.gov"},
-{name="Jun Wang", email="jun.wang@noaa.gov"},
-{name="Sadegh Tabas"},
+    {name = "Linlin Cui", email = "linlin.cui@noaa.gov"},
+    {name = "Jun Wang", email = "jun.wang@noaa.gov"},
+    {name = "Sadegh Tabas"},
 ]
-license = {file = "LICENSE.txt"}
-requires-python = ">=3.11, <3.13"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11,<3.14"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Earth Science",
+    "License :: OSI Approved :: Creative Commons Zero",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+keywords = ["weather forecasting", "machine learning", "GraphCast", "GEFS", "ensemble prediction"]
 dependencies = [
-    "numpy",
-    "matplotlib",
-    "xarray",
-    "netCDF4",
-    "cartopy",
-    "pygrib",
-    "eccodes",
-    "iris",
-    "iris-grib",
-    "jupyterlab",
-    "dm-tree",
-    "boto3",
+    "numpy>=1.21.0",
+    "matplotlib>=3.5.0",
+    "xarray>=2022.6.0",
+    "netCDF4>=1.6.0",
+    "cartopy>=0.21.0",
+    "pygrib>=2.1.4",
+    "eccodes>=1.4.0",
+    "scitools-iris>=3.12.0",
+    "iris-grib>=0.18.0",
+    "jupyterlab>=3.4.0",
+    "dm-tree>=0.1.7",
+    "boto3>=1.26.0",
+    "jax>=0.4.1",
+    "jaxlib>=0.4.1",
+    "dm-haiku>=0.0.9",
+    "chex>=0.1.5",
+    "jraph>=0.0.6.dev0",
+    "flax>=0.6.0",
+    "pandas>=1.5.0",
+    "scipy>=1.9.0",
+    "trimesh>=3.15.0",
+    "typing-extensions>=4.4.0",
+    "requests>=2.28.0",
+    "beautifulsoup4>=4.11.0",
+    "graphcast@git+https://github.com/google-deepmind/graphcast@6819a0f19796ca9c34a079855339b37134b8d930"
+]
+
+[project.optional-dependencies]
+gpu = ["jax[cuda12]>=0.4.1"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "mypy>=0.991",
+]
+notebooks = [
+    "jupyter>=1.0.0",
+    "ipywidgets>=8.0.0",
 ]
 
 [project.urls]
-source="https://github.com/NOAA-EMC/MLGEFS"
+"Homepage" = "https://github.com/NOAA-EMC/MLGEFS"
+"Bug Reports" = "https://github.com/NOAA-EMC/MLGEFS/issues"
+"Source" = "https://github.com/NOAA-EMC/MLGEFS"
+"Documentation" = "https://github.com/NOAA-EMC/MLGEFS/blob/main/readme.md"
+
+[project.scripts]
+mlgefs-gen-ics = "mlgefs.oper.gen_gefs_ics:main"
+mlgefs-run-forecast = "mlgefs.oper.run_graphcast_ens:main"
+mlgefs-generate-batch = "mlgefs.training.generate_batch_files:main"
 
 [build-system]
 requires = ["setuptools>=64.0.0", "setuptools-scm"]
