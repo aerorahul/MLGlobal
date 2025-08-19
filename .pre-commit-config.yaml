@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        name: isort
+  - repo: local
+    hooks:
+    - id: pycodestyle
+      name: pycodestyle
+      entry: pycodestyle
+      language: system
+      types: [python]
+      args: ['--config=.pycodestyle']
