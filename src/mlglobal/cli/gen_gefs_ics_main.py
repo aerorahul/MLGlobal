@@ -1,0 +1,59 @@
+import argparse
+from datetime import datetime
+from mlglobal.gen_gefs_ics import GEFSDownloader, GEFSPreprocessor
+
+def main():
+    parser = argparse.ArgumentParser(description="Download and process GEFS data")
+    parser.add_argument("start_datetime", help="Start datetime in the format 'YYYYMMDDHH'")
+    parser.add_argument("end_datetime", help="End datetime in the format 'YYYYMMDDHH'")
+    parser.add_argument("member", help="GEFS member options: [c00, p01, ..., p30]")
+    parser.add_argument("-l", "--levels", help="number of pressure levels, options: 13, 37", default="13")
+    parser.add_argument("-m", "--method", help="method to extract variables from grib2, options: wgrib2, pygrib", default="wgrib2")
+    parser.add_argument("-s", "--source", help="the source repository to download gdas grib2 data, options: s3 or wcoss2", default="s3")
+    parser.add_argument("-o", "--output", help="Output directory for processed data")
+    parser.add_argument("-d", "--download", help="Download directory for raw data")
+    parser.add_argument("-k", "--keep", help="Keep downloaded data (yes or no)", default="no")
+
+    args = parser.parse_args()
+
+    start_datetime = datetime.strptime(args.start_datetime, "%Y%m%d%H")
+    end_datetime = datetime.strptime(args.end_datetime, "%Y%m%d%H")
+    member = args.member
+    num_pressure_levels = int(args.levels)
+    method = args.method
+    data_source = args.source
+    output_directory = args.output
+    download_directory = args.download
+    keep_downloaded_data = args.keep.lower() == "yes"
+
+
+    # Download step
+    downloader = GEFSDownloader(
+        start_datetime,
+        end_datetime,
+        member,
+        num_pressure_levels,
+        data_source,
+        download_directory
+    )
+    downloader.download_data()
+
+    # Preprocessing step
+    preprocessor = GEFSPreprocessor(
+        start_datetime,
+        end_datetime,
+        member,
+        num_pressure_levels,
+        output_directory,
+        download_directory,
+        keep_downloaded_data
+    )
+    if method == "wgrib2":
+        preprocessor.process_data_with_wgrib2()
+    elif method == "pygrib":
+        preprocessor.process_data_with_pygrib()
+    else:
+        raise NotImplementedError(f"Method {method} is not supported!")
+
+if __name__ == "__main__":
+    main()
